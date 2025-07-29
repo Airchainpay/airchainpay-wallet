@@ -300,7 +300,7 @@ export class BLEAdvertisingSecurity {
     
     // Clean up expired session tokens
     const now = Date.now();
-    for (const [deviceName, session] of this.sessionTokens.entries()) {
+    for (const [deviceName, session] of Array.from(this.sessionTokens.entries())) {
       if (now > session.expiresAt) {
         this.sessionTokens.delete(deviceName);
       }
