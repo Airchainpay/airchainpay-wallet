@@ -1,64 +1,74 @@
 ![AirChainPay Logo](https://rose-imaginative-lion-87.mypinata.cloud/ipfs/bafybeiaer2oyqh5qpkmtuewgqcbaxjjvrleblkisor37nkib3nhesgency)
 
-# AirChainPay
+# AirChainPay Wallet
 
-AirChainPay is a next-generation multi-chain payment platform for seamless, secure, and instant crypto transactions—online and offline. Leveraging blockchain and Bluetooth, it enables payments across multiple networks, even with limited or no internet. Built for interoperability, privacy, and ease of use for merchants and consumers.
-
----
-
-## Project Structure
-
-- **airchainpay-contracts/** — Core smart contracts (Solidity) for Base Sepolia and Core Testnet
-- **airchainpay-relay-rust/** — High-performance Rust relay server for Bluetooth and blockchain transaction processing
-- **airchainpay-wallet-core/** — Secure Rust wallet core handling all cryptographic operations, sensitive data management, and hardware-backed secure storage
-- **airchainpay-wallet/** — React Native mobile wallet app (Expo)
+AirChainPay Wallet is a next-generation multi-chain mobile wallet for seamless, secure, and instant crypto transactions—online and offline. Built with React Native and Expo, it enables payments across multiple networks, even with limited or no internet. Designed for interoperability, privacy, and ease of use for merchants and consumers.
 
 ---
 
 ## Features
 
-### Smart Contracts
-- Minimal payment and transfer contracts (Solidity v0.8.x)
-- EVM-compatible, designed for offline-signed transactions
-- Multi-token support (native and ERC-20)
-- Payment verification, fee collection, batch processing
+### Multi-Chain Support
+- **Base Sepolia** - Ethereum Layer 2 testnet
+- **Core Testnet** - Core blockchain testnet
+- Extensible architecture for additional networks
 
-### Relay Server (Rust)
-- Multi-chain support (Core Testnet, Base Sepolia)
-- Secure transaction validation and blockchain broadcasting
-- Structured logging, metrics, health checks
-- Rate limiting, JWT authentication, CORS
-- Background task scheduler, data compression, efficient storage
-- API endpoints for health, transaction submission, device info, metrics
+### Token Support
+- **Native tokens** (ETH, CORE)
+- **ERC-20 tokens** (USDC, USDT)
+- Mock tokens for testing and development
 
-### Wallet Core (Rust)
-- All wallet cryptographic operations (key management, signing, encryption) in Rust for maximum security
-- Hardware-backed storage: iOS Keychain, Android Keystore
-- Zero memory exposure for private keys and sensitive data
-- Multi-chain support: Core Testnet, Base Sepolia, and more
-- Secure BLE communication and pairing
-- FFI bridge: safe, high-performance APIs to the mobile wallet
+### Offline Payments
+- **Bluetooth (BLE) peer-to-peer transfer** for offline payments
+- Secure device pairing and communication
+- Offline transaction queue with automatic retry
 
-### Mobile Wallet (React Native)
-- Multi-chain support: Base Sepolia, Core Testnet
-- Token support: USDC, USDT (native and mock)
-- Bluetooth (BLE) peer-to-peer transfer (offline payments)
-- QR code scanning for payment addresses
-- Secure key storage with encrypted wallet data (powered by Wallet Core)
-- Transaction history and status tracking
-- Hybrid secure key storage (Keychain + SecureStore fallback)
-- Offline transaction queue
-- EVM wallet and signing
+### Security Features
+- **Hardware-backed secure storage** (iOS Keychain, Android Keystore)
+- **Encrypted wallet data** with secure key management
+- **Hybrid storage** (Keychain + SecureStore fallback)
+- **Zero memory exposure** for private keys and sensitive data
+
+### User Experience
+- **QR code scanning** for payment addresses
+- **Transaction history** and status tracking
+- **Multi-token balance view** with real-time updates
+- **Cross-wallet security warnings** and offline transaction expiry notifications
+- **Modern, responsive UI** with dark/light theme support
+
+### Development Features
+- **EVM wallet and signing** capabilities
+- **Gas price validation** and optimization
+- **Comprehensive error handling** and user feedback
+- **Debug scripts** for development and testing
 
 ---
 
-## Architecture Overview
+## Project Structure
 
 ```
-contracts/         # Solidity smart contracts
-relay-rust/        # Rust relay server (API, blockchain, BLE)
-wallet-core/       # Rust wallet core (crypto, storage, FFI)
-wallet/            # React Native mobile wallet (Expo)
+airchainpay-wallet/
+├── app/                    # Expo Router app screens
+│   ├── (tabs)/            # Tab-based navigation
+│   ├── _layout.tsx        # Root layout
+│   └── *.tsx              # Individual screens
+├── components/             # Reusable UI components
+├── constants/              # App constants and configuration
+├── hooks/                  # Custom React hooks
+├── src/                    # Core application code
+│   ├── bluetooth/         # BLE communication
+│   ├── components/        # App-specific components
+│   ├── constants/         # App constants
+│   ├── hooks/             # Custom hooks
+│   ├── screens/           # Screen components
+│   ├── services/          # Business logic services
+│   ├── types/             # TypeScript type definitions
+│   ├── utils/             # Utility functions
+│   └── wallet/            # Wallet management
+├── android/               # Android-specific files
+├── ios/                   # iOS-specific files
+├── assets/                # Static assets
+└── scripts/               # Development and deployment scripts
 ```
 
 ---
@@ -67,109 +77,182 @@ wallet/            # React Native mobile wallet (Expo)
 
 ### Prerequisites
 - Node.js 18+
-- Yarn or npm
-- Rust 1.70+
+- npm or yarn
 - React Native development environment
-- Android Studio / Xcode
+- Android Studio (for Android development)
+- Xcode (for iOS development, macOS only)
 
 ### Installation
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Hurotamo/airchainpay.git
-   cd airchainpay
+   git clone https://github.com/Airchainpay/airchainpay-wallet.git
+   cd airchainpay-wallet
    ```
 
-2. Install dependencies for each project:
+2. Install dependencies:
    ```bash
-   # Contracts
-   cd airchainpay-contracts
-   npm install
-
-   # Relay Server (Rust)
-   cd ../airchainpay-relay-rust/airchainpay-relay
-   cargo build
-
-   # Wallet Core (Rust)
-   cd ../../airchainpay-wallet-core
-   cargo build --release
-
-   # Mobile Wallet
-   cd ../airchainpay-wallet
    npm install
    ```
 
-3. Follow the setup instructions in each subproject's README for detailed configuration.
+3. Set up environment variables:
+   ```bash
+   cp sample.env.staging .env
+   # Edit .env with your configuration
+   ```
 
----
+4. Start the development server:
+   ```bash
+   npm run start
+   ```
 
-## Usage
+### Development
 
-### Smart Contracts
+#### Running on Different Platforms
 ```bash
-cd airchainpay-contracts
-npx hardhat compile
-npx hardhat test
-# Deployment example:
-npx hardhat run scripts/deploy.js --network base_sepolia
-```
-
-### Relay Server (Rust)
-```bash
-cd airchainpay-relay-rust/airchainpay-relay
-cp env.example.sh .env  # Edit .env as needed
-cargo run                # Development
-RUST_ENV=production cargo run --release  # Production
-```
-
-### Wallet Core (Rust)
-```bash
-cd airchainpay-wallet-core
-cargo build --release
-cargo test
-```
-
-### Mobile Wallet
-```bash
-cd airchainpay-wallet
+# Start Expo development server
 npm run start
-# For Android/iOS/web, use Expo CLI options
+
+# Run on Android
+npm run android
+
+# Run on iOS (macOS only)
+npm run ios
+
+# Run on web
+npm run web
 ```
+
+#### Debug Scripts
+The project includes various debug and fix scripts in the `scripts/` directory:
+- `fix-ble-issues.js` - Fix common BLE issues
+- `fix-camera-error.js` - Resolve camera permissions
+- `start-emulator.sh` - Start Android emulator
+- `test-ble-advertising.js` - Test BLE advertising
 
 ---
 
-## Configuration & Environment
+## Configuration
 
-- Each subproject may require its own `.env` file (see examples in each directory)
-- Set up blockchain RPC URLs, API keys, and relay server URLs as needed
-- Never commit secrets or API keys to git
+### Environment Variables
+Create a `.env` file based on `sample.env.staging`:
+
+```env
+# Blockchain RPC URLs
+BASE_SEPOLIA_RPC_URL=https://sepolia.base.org
+CORE_TESTNET_RPC_URL=https://rpc.test.btcs.network
+
+# Relay Server URLs
+RELAY_SERVER_URL=https://your-relay-server.com
+
+# API Keys (if required)
+ETHERSCAN_API_KEY=your_etherscan_api_key
+
+# App Configuration
+APP_ENV=development
+DEBUG_MODE=true
+```
+
+### Network Configuration
+The app supports multiple blockchain networks. Configuration is handled in `src/constants/config.ts`.
 
 ---
 
 ## Security
-- All cryptographic operations and sensitive data management are handled in Rust (Wallet Core)
-- Hardware-backed secure storage (Keychain/Keystore)
-- Secure BLE communication and device pairing
-- Input validation, JWT authentication, rate limiting, CORS, and API key support in the relay server
-- Smart contracts designed for offline-signed transactions and multi-token support
+
+### Key Management
+- **Hardware-backed storage** using iOS Keychain and Android Keystore
+- **Encrypted wallet data** with secure key derivation
+- **Zero memory exposure** for sensitive data
+- **Secure BLE communication** with device pairing
+
+### Best Practices
+- Never commit secrets or API keys to git
+- Use environment variables for sensitive configuration
+- Regularly update dependencies for security patches
+- Follow secure coding practices for wallet applications
 
 ---
 
-## Monitoring & Performance
-- Structured logging and Prometheus metrics (Relay Server)
-- Health checks and system metrics
-- High throughput: ~1000 TPS, <50MB RAM, <2s startup (Relay Server)
-- Predictable, low-latency cryptographic operations (Wallet Core)
+## Architecture
+
+### Core Components
+- **BluetoothManager** - Handles BLE communication and device discovery
+- **MultiChainWalletManager** - Manages wallet operations across different networks
+- **TransactionService** - Handles transaction creation, signing, and broadcasting
+- **SecureStorageService** - Manages encrypted storage of sensitive data
+
+### Data Flow
+1. **Wallet Creation** → Secure key generation and storage
+2. **Transaction Initiation** → Gas estimation and transaction building
+3. **Signing** → Secure transaction signing with hardware-backed keys
+4. **Broadcasting** → Transaction submission to blockchain networks
+5. **Confirmation** → Transaction status monitoring and updates
 
 ---
 
 ## Contributing
-1. Fork & branch
-2. Make changes & add tests
-3. Submit a pull request
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes and add tests
+4. Commit your changes (`git commit -m 'Add amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
+
+### Development Guidelines
+- Follow TypeScript best practices
+- Write comprehensive tests for new features
+- Update documentation for API changes
+- Follow the existing code style and patterns
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+#### BLE Issues
+```bash
+npm run fix-ble-issues
+```
+
+#### Camera Permissions
+```bash
+npm run fix-camera-error
+```
+
+#### Android Emulator
+```bash
+./scripts/start-emulator.sh
+```
+
+#### Dependencies
+```bash
+npm run fix-ethers-deps
+```
 
 ---
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Support
+
+For support and questions:
+- Create an issue on GitHub
+- Check the troubleshooting section above
+- Review the debug scripts in the `scripts/` directory
+
+---
+
+## Roadmap
+
+- [ ] Additional blockchain network support
+- [ ] Enhanced offline transaction capabilities
+- [ ] Advanced security features
+- [ ] Performance optimizations
+- [ ] Additional token support 
